@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
@@ -16,6 +17,7 @@ import javax.swing.JScrollPane;
 import net.proteanit.sql.DbUtils;
 
 import java.sql.*;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -56,7 +58,7 @@ public class GoscieHotelu extends JFrame {
 			Date rot = sdf.parse(room_occupied_to);
 			Date aktualna_data = sdf.parse(ad);
 			
-			if(aktualna_data.compareTo(rof) > 0 && aktualna_data.compareTo(rot) < 0)
+			if(aktualna_data.compareTo(rof) >= 0 && aktualna_data.compareTo(rot) <= 0)
 			{
 				return true;
 			}
@@ -102,35 +104,46 @@ public class GoscieHotelu extends JFrame {
 				
 		table = new JTable();
 		scrollPane.setViewportView(table);
-		//		
-		//		while(rs.next()) 
-		//		{
-		//			int id_goscia = rs.getInt("IDGoscia");
-		//			PreparedStatement pst2 = connection.prepareStatement("SELECT DataPrzyjazdu, DataOdjazdu FROM Pokoje WHERE IdGoscia = ?");
-		//			pst2.setInt(1, id_goscia);
-		//			ResultSet rs2 = pst.executeQuery();
-		//			
-		//			String data_od = rs2.getString("DataPrzyjazdu");
-		//			String data_do = rs2.getString("DataOdjazdu");
-		//			
-		//			if(!AktualniGoscie(aktualna_data, data_od, data_do))
-		//			{
-		//				rs.deleteRow();
-		//			}
-		//		}
-		//		
-				
 		
-//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//		Date data_teraz = new Date();
-//		String aktualna_data = dateFormat.format(data_teraz);
-//		
-//		
 		String query = "SELECT * FROM Goscie";
 		PreparedStatement pst = connection.prepareStatement(query);
 		ResultSet rs = pst.executeQuery();
+				
+				while(rs.next()) 
+				{
+					
+					PreparedStatement pst2 = connection.prepareStatement("SELECT DataPrzyjazdu, DataOdjazdu FROM Pokoje WHERE IDGoscia=?");
+					
+					int id_goscia = rs.getInt("IDGoscia");
+					pst2.setInt(1, id_goscia);
+					ResultSet rs2 = pst2.executeQuery();
+					
+					if(rs2.next()) 
+					{
+						String data_od = rs2.getString("DataPrzyjazdu");
+						String data_do = rs2.getString("DataOdjazdu");
+						
+						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+						Date ad = new Date();
+						String aktualna_data = dateFormat.format(ad);
+						
+						if(AktualniGoscie(aktualna_data, data_od, data_do))
+						{
+							String czy_gosc = "UPDATE Goscie SET czyGosc = true WHERE idGoscia=?";
+							PreparedStatement psczygosc = connection.prepareStatement(czy_gosc);
+							psczygosc.setInt(1, id_goscia);
+							psczygosc.executeUpdate();
+						}
+					}
+					
+					
+				}
 		
-		table.setModel(DbUtils.resultSetToTableModel(rs));
+		String goscieKwerenda = "SELECT IDGoscia, Imie, Nazwisko, nrPokoju, Adres FROM Goscie WHERE czyGosc = true";
+		PreparedStatement psgoscie = connection.prepareStatement(goscieKwerenda);
+		ResultSet rsgoscie = psgoscie.executeQuery();
+		table.setModel(DbUtils.resultSetToTableModel(rsgoscie));
+		
 		
 	}
 }

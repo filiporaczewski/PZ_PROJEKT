@@ -97,7 +97,7 @@ public class ReservationForm extends JFrame {
 				HotelApp.id_goscia += 1;
 				JOptionPane.showMessageDialog(null, HotelApp.id_goscia);
 				JOptionPane.showMessageDialog(null, HotelApp.nrPok);
-				String dane = "INSERT INTO Goscie VALUES (?, ?, ?, ?, ?)";
+				String dane = "INSERT INTO Goscie (IDGoscia, Imie, Nazwisko, nrPokoju, Adres) VALUES  (?, ?, ?, ?, ?)";
 				try {
 					
 					PreparedStatement pst = connection.prepareStatement(dane);
