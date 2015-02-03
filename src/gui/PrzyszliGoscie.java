@@ -2,10 +2,14 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Frame;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import java.awt.Color;
 
@@ -23,6 +27,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import javax.swing.JButton;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class PrzyszliGoscie extends JFrame {
 
@@ -63,6 +72,20 @@ public class PrzyszliGoscie extends JFrame {
 		return false;
 	}
 	
+	public void odswiezTabele() 
+	{
+		String goscieKwerenda = "Select Goscie.IDGoscia, Goscie.Imie, Goscie.Nazwisko, Goscie.nrPokoju, Goscie.Adres, Pokoje.DataPrzyjazdu, Pokoje.DataOdjazdu FROM Goscie INNER JOIN Pokoje ON Goscie.IDGoscia = Pokoje.IDGoscia WHERE Goscie.czyGosc = true";
+		PreparedStatement psgoscie;
+		try {
+			psgoscie = connection.prepareStatement(goscieKwerenda);
+			ResultSet rsgoscie = psgoscie.executeQuery();
+			table.setModel(DbUtils.resultSetToTableModel(rsgoscie));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+	
 	
 	
 	/**
@@ -74,7 +97,7 @@ public class PrzyszliGoscie extends JFrame {
 		connection = mySqlConnection.dbConnector();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 729, 503);
+		setBounds(100, 100, 1117, 502);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(0, 0, 51));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -84,41 +107,36 @@ public class PrzyszliGoscie extends JFrame {
 		JLabel lblNewLabel = new JLabel("Przyszli goscie");
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 25));
 		lblNewLabel.setForeground(new Color(255, 215, 0));
-		lblNewLabel.setBounds(253, 30, 252, 73);
+		lblNewLabel.setBounds(341, 23, 252, 73);
 		contentPane.add(lblNewLabel);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(30, 115, 651, 326);
+		scrollPane.setBounds(30, 115, 844, 326);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
 		scrollPane.setViewportView(table);
 		
-		///////////////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////////////	
 		
 		String query = "SELECT * FROM Goscie";
 		PreparedStatement pst = connection.prepareStatement(query);
 		ResultSet rs = pst.executeQuery();
-
 				
 				while(rs.next()) 
-				{
-					
-					PreparedStatement pst2 = connection.prepareStatement("SELECT DataPrzyjazdu FROM Pokoje WHERE IDGoscia=?");
-					
+				{					
+					PreparedStatement pst2 = connection.prepareStatement("SELECT DataPrzyjazdu FROM Pokoje WHERE IDGoscia=?");					
 					int id_goscia = rs.getInt("IDGoscia");
 					pst2.setInt(1, id_goscia);
-					ResultSet rs2 = pst2.executeQuery();
-//					
+					ResultSet rs2 = pst2.executeQuery();		
 					if(rs2.next()) 
 					{
-
 						String data_od = rs2.getString("DataPrzyjazdu");
-//						
+						
 						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 						Date ad = new Date();
 						String aktualna_data = dateFormat.format(ad);
-//						
+						
 						if(czyPrzyszliGoscie(aktualna_data, data_od))
 						{
 							String czy_gosc = "UPDATE Goscie SET czyGosc = true WHERE idGoscia=?";
@@ -134,14 +152,51 @@ public class PrzyszliGoscie extends JFrame {
 							niepsczygosc.executeUpdate();
 						}
 					}
-//					
-//					
 				}
-//		
-		String goscieKwerenda = "Select Goscie.IDGoscia, Goscie.Imie, Goscie.Nazwisko, Goscie.nrPokoju, Goscie.Adres, Pokoje.DataPrzyjazdu, Pokoje.DataOdjazdu FROM Goscie INNER JOIN Pokoje ON Goscie.IDGoscia = Pokoje.IDGoscia WHERE Goscie.czyGosc = true";
-		PreparedStatement psgoscie = connection.prepareStatement(goscieKwerenda);
-		ResultSet rsgoscie = psgoscie.executeQuery();
-		table.setModel(DbUtils.resultSetToTableModel(rsgoscie));
+		
+		odswiezTabele();
+		
+		
+		JButton btnUsunGoscia = new JButton("Usun goscia");
+		btnUsunGoscia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int ostrzezenie = JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunac goscia?", "Usun", JOptionPane.YES_NO_OPTION);
+				
+				if(ostrzezenie == 0) 		
+				{
+					int current_row = table.getSelectedRow();
+					Object x = table.getValueAt(current_row, 0);
+					int IDGoscia = Integer.parseInt(x.toString());
+					
+					String query = "DELETE FROM Goscie WHERE IDGoscia=?";
+					PreparedStatement pst;
+					try {
+						pst = connection.prepareStatement(query);
+						pst.setInt(1, IDGoscia);
+						pst.execute();
+						odswiezTabele();
+						JOptionPane.showMessageDialog(null, "Gosc "+IDGoscia+" usuniety!");
+						
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}				
+				
+			}
+		});
+		btnUsunGoscia.setBounds(907, 125, 152, 47);
+		contentPane.add(btnUsunGoscia);
+		
+		JButton btnOdswiez = new JButton("Odswiez");
+		btnOdswiez.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+				tableModel.fireTableDataChanged();
+			}
+		});
+		btnOdswiez.setBounds(907, 193, 152, 47);
+		contentPane.add(btnOdswiez);
 		
 	}
 }

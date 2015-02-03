@@ -109,20 +109,39 @@ public class ReservationForm extends JFrame {
 					pst.setString(5, textPane_2.getText());
 					pst.executeUpdate();
 					
-					String uzupelnienie_tabeli_pokoje = "UPDATE Pokoje SET IDGoscia = ?, DataPrzyjazdu = ?, DataOdjazdu = ? WHERE nrPokoju = ?";
-					try {
-						PreparedStatement pst2 = connection.prepareStatement(uzupelnienie_tabeli_pokoje);
-						pst2.setInt(1, HotelApp.id_goscia);
-						pst2.setString(2, HotelApp.data_przyjazdu);
-						pst2.setString(3, HotelApp.data_wyjazdu);
-						pst2.setString(4, HotelApp.nrPok);
-						pst2.executeUpdate();
+					String wszystko_z_pokoi = "SELECT * FROM Pokoje WHERE IDGoscia IS NOT NULL";
+					PreparedStatement pokoje_wszystko = connection.prepareStatement(wszystko_z_pokoi);
+					ResultSet wszystkie_pokoje = pokoje_wszystko.executeQuery();
+					
+					if(wszystkie_pokoje.next())
+					{
+						String dodaj_nowy_wiersz = "INSERT INTO Pokoje (nrPokoju, RodzajPokoju, Cena, IDGoscia, DataPrzyjazdu, DataOdjazdu) VALUES (?, ?, ?, ?, ?, ?)";
+						PreparedStatement dodaj_wiersz = connection.prepareStatement(dodaj_nowy_wiersz);
+						dodaj_wiersz.setString(1, wszystkie_pokoje.getString(1));
+						dodaj_wiersz.setInt(2, wszystkie_pokoje.getInt(2));
+						dodaj_wiersz.setInt(3, wszystkie_pokoje.getInt(3));
+						dodaj_wiersz.setInt(4, HotelApp.id_goscia);
+						dodaj_wiersz.setString(5, HotelApp.data_przyjazdu);
+						dodaj_wiersz.setString(6, HotelApp.data_wyjazdu);
+						dodaj_wiersz.execute();
 						
-						
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					} else 
+					{
+						String uzupelnienie_tabeli_pokoje = "UPDATE Pokoje SET IDGoscia = ?, DataPrzyjazdu = ?, DataOdjazdu = ? WHERE nrPokoju = ?";
+						try {
+							PreparedStatement pst2 = connection.prepareStatement(uzupelnienie_tabeli_pokoje);
+							pst2.setInt(1, HotelApp.id_goscia);
+							pst2.setString(2, HotelApp.data_przyjazdu);
+							pst2.setString(3, HotelApp.data_wyjazdu);
+							pst2.setString(4, HotelApp.nrPok);
+							pst2.executeUpdate();
+							
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 					}
+							
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

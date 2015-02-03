@@ -46,7 +46,6 @@ public class GoscieHotelu extends JFrame {
 	}
 	
 	Connection connection = null;
-	private JScrollPane scrollPane_1;
 
 	public Boolean AktualniGoscie(String ad, String room_occupied_from, String room_occupied_to)
 	{
@@ -82,7 +81,7 @@ public class GoscieHotelu extends JFrame {
 		connection = mySqlConnection.dbConnector();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 664, 422);
+		setBounds(100, 100, 890, 469);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(0, 0, 51));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -92,18 +91,8 @@ public class GoscieHotelu extends JFrame {
 		JLabel lblNewLabel = new JLabel("Nasi goscie");
 		lblNewLabel.setForeground(new Color(255, 215, 0));
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 25));
-		lblNewLabel.setBounds(240, 12, 236, 46);
+		lblNewLabel.setBounds(349, 12, 236, 46);
 		contentPane.add(lblNewLabel);
-		
-		scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(24, 87, 613, 277);
-		contentPane.add(scrollPane_1);
-		
-		scrollPane = new JScrollPane();
-		scrollPane_1.setViewportView(scrollPane);
-				
-		table = new JTable();
-		scrollPane.setViewportView(table);
 		
 		String query = "SELECT * FROM Goscie";
 		PreparedStatement pst = connection.prepareStatement(query);
@@ -149,6 +138,13 @@ public class GoscieHotelu extends JFrame {
 		String goscieKwerenda = "Select Goscie.IDGoscia, Goscie.Imie, Goscie.Nazwisko, Goscie.nrPokoju, Goscie.Adres, Pokoje.DataPrzyjazdu, Pokoje.DataOdjazdu FROM Goscie INNER JOIN Pokoje ON Goscie.IDGoscia = Pokoje.IDGoscia WHERE Goscie.czyGosc = true";
 		PreparedStatement psgoscie = connection.prepareStatement(goscieKwerenda);
 		ResultSet rsgoscie = psgoscie.executeQuery();
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(33, 86, 813, 340);
+		contentPane.add(scrollPane);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
 		table.setModel(DbUtils.resultSetToTableModel(rsgoscie));
 		
 		
