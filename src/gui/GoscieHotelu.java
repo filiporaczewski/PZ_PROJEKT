@@ -23,6 +23,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.awt.Color;
 
+import javax.swing.JButton;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 public class GoscieHotelu extends JFrame {
 
 	private JPanel contentPane;
@@ -73,6 +78,20 @@ public class GoscieHotelu extends JFrame {
 		}	
 	}
 	
+	public void odswiezTabele() 
+	{
+		String goscieKwerenda = "Select Goscie.IDGoscia, Goscie.Imie, Goscie.Nazwisko, Goscie.nrPokoju, Goscie.Adres, Pokoje.DataPrzyjazdu, Pokoje.DataOdjazdu FROM Goscie INNER JOIN Pokoje ON Goscie.IDGoscia = Pokoje.IDGoscia WHERE Goscie.czyGosc = true";
+		PreparedStatement psgoscie;
+		try {
+			psgoscie = connection.prepareStatement(goscieKwerenda);
+			ResultSet rsgoscie = psgoscie.executeQuery();
+			table.setModel(DbUtils.resultSetToTableModel(rsgoscie));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+	
 	/**
 	 * Create the frame.
 	 * @throws SQLException 
@@ -80,18 +99,18 @@ public class GoscieHotelu extends JFrame {
 	public GoscieHotelu() throws SQLException {
 		connection = mySqlConnection.dbConnector();
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 890, 469);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 1055, 483);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(0, 0, 51));
+		contentPane.setBackground(new Color(16, 16, 32));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Nasi goscie");
-		lblNewLabel.setForeground(new Color(255, 215, 0));
+		lblNewLabel.setForeground(new Color(96, 96, 128));
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 25));
-		lblNewLabel.setBounds(349, 12, 236, 46);
+		lblNewLabel.setBounds(338, 28, 236, 46);
 		contentPane.add(lblNewLabel);
 		
 		String query = "SELECT * FROM Goscie";
@@ -146,6 +165,41 @@ public class GoscieHotelu extends JFrame {
 		table = new JTable();
 		scrollPane.setViewportView(table);
 		table.setModel(DbUtils.resultSetToTableModel(rsgoscie));
+		
+		JButton btnUsunGoscia = new JButton("Usun goscia");
+		btnUsunGoscia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int ostrzezenie = JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunac goscia?", "Usun", JOptionPane.YES_NO_OPTION);
+				
+				if(ostrzezenie == 0) 		
+				{
+					int current_row = table.getSelectedRow();
+					Object x = table.getValueAt(current_row, 0);
+					int IDGoscia = Integer.parseInt(x.toString());
+					
+					String query = "DELETE FROM Goscie WHERE IDGoscia=?";
+					PreparedStatement pst;
+					try {
+						pst = connection.prepareStatement(query);
+						pst.setInt(1, IDGoscia);
+						pst.execute();
+						odswiezTabele();
+						JOptionPane.showMessageDialog(null, "Gosc "+IDGoscia+" usuniety!");
+						
+						String usun_gosci_z_pokoju = "UPDATE Pokoje SET IDGoscia=NULL, DataPrzyjazdu=NULL, DataOdjazdu=NULL WHERE IDGoscia=?";
+						PreparedStatement UsunGosciZPokoju = connection.prepareStatement(usun_gosci_z_pokoju);
+						UsunGosciZPokoju.setInt(1, IDGoscia);
+						UsunGosciZPokoju.executeUpdate();
+						
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		btnUsunGoscia.setBounds(876, 98, 142, 37);
+		contentPane.add(btnUsunGoscia);
 		
 		
 	}

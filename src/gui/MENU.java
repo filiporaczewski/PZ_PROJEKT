@@ -2,7 +2,11 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -16,6 +20,10 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.awt.Color;
 import java.awt.Font;
+import java.io.File;
+import java.io.IOException;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
 
 public class MENU extends JFrame {
 
@@ -24,6 +32,7 @@ public class MENU extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -39,21 +48,22 @@ public class MENU extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws IOException 
 	 */
-	public MENU() {
+	public MENU() throws IOException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 729, 515);
+		setBounds(100, 100, 1185, 681);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
 		JMenu mnNewMenu = new JMenu("Opcje");
 		mnNewMenu.setFont(new Font("Dialog", Font.BOLD, 20));
-		mnNewMenu.setForeground(new Color(204, 204, 0));
+		mnNewMenu.setForeground(new Color(96, 96, 128));
 		menuBar.add(mnNewMenu);
 		
 		JMenuItem mntmS = new JMenuItem("Rezerwacja");
-		mntmS.setForeground(new Color(204, 204, 0));
+		mntmS.setForeground(new Color(96, 96, 128));
 		mntmS.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -73,7 +83,7 @@ public class MENU extends JFrame {
 		mnNewMenu.add(mntmS);
 		
 		JMenuItem mntmNewMenuItem = new JMenuItem("Goscie");
-		mntmNewMenuItem.setForeground(new Color(204, 204, 0));
+		mntmNewMenuItem.setForeground(new Color(96, 96, 128));
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -89,7 +99,7 @@ public class MENU extends JFrame {
 		mnNewMenu.add(mntmNewMenuItem);
 		
 		JMenuItem mntmDodajPokoj = new JMenuItem("Dodaj Pokoj");
-		mntmDodajPokoj.setForeground(new Color(204, 204, 0));
+		mntmDodajPokoj.setForeground(new Color(96, 96, 128));
 		mntmDodajPokoj.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DodajPokoj dodaj_pokoj = new DodajPokoj();
@@ -116,13 +126,19 @@ public class MENU extends JFrame {
 				
 			}
 		});
-		mntmNewMenuItem_1.setForeground(new Color(204, 204, 0));
+		mntmNewMenuItem_1.setForeground(new Color(96, 96, 128));
 		mnNewMenu.add(mntmNewMenuItem_1);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(0, 0, 51));
+		
+		contentPane.setBackground(new Color(16, 16, 32));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel label = new JLabel("");
+		label.setBounds(0, 0, 1185, 661);
+		label.setIcon(new ImageIcon("/home/filip-linux/workspace/gui/obrazki/hti_1448061504.jpg"));
+		contentPane.add(label);
 	}
-
+	
 }

@@ -49,33 +49,33 @@ public class ReservationForm extends JFrame {
 	 */
 	public ReservationForm() throws ParseException {
 		connection = mySqlConnection.dbConnector();
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 606, 488);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(0, 0, 51));
+		contentPane.setBackground(new Color(16, 16, 32));
 		contentPane.setForeground(new Color(34, 139, 34));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Podaj swoje dane");
-		lblNewLabel.setForeground(new Color(255, 215, 0));
+		lblNewLabel.setForeground(new Color(96, 96, 128));
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 32));
 		lblNewLabel.setBounds(135, 25, 352, 84);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("Imie");
-		lblNewLabel_1.setForeground(new Color(34, 139, 34));
+		lblNewLabel_1.setForeground(new Color(255, 255, 0));
 		lblNewLabel_1.setBounds(87, 154, 70, 15);
 		contentPane.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("Nazwisko");
-		lblNewLabel_2.setForeground(new Color(34, 139, 34));
+		lblNewLabel_2.setForeground(new Color(255, 255, 0));
 		lblNewLabel_2.setBounds(87, 230, 70, 15);
 		contentPane.add(lblNewLabel_2);
 		
 		JLabel lblA = new JLabel("Adres");
-		lblA.setForeground(new Color(34, 139, 34));
+		lblA.setForeground(new Color(255, 255, 0));
 		lblA.setBounds(87, 321, 70, 15);
 		contentPane.add(lblA);
 		

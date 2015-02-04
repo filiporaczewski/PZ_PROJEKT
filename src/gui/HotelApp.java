@@ -1,12 +1,12 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.*;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 
@@ -38,6 +38,9 @@ import java.awt.event.MouseEvent;
 import com.toedter.calendar.JDateChooser;
 
 import java.awt.Color;
+import java.beans.PropertyChangeListener;
+import javax.swing.border.LineBorder;
+import javax.swing.border.CompoundBorder;
 
 public class HotelApp extends JFrame {
 
@@ -107,70 +110,77 @@ public class HotelApp extends JFrame {
 	
 	public HotelApp() throws ParseException, SQLException {
 		connection = mySqlConnection.dbConnector();
-	
 		
-		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 795, 589);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 1013, 691);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(0, 0, 51));
+		contentPane.setBackground(new Color(16, 16, 32));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		scrollPane = new JScrollPane();
-		
-		
-		scrollPane.setBounds(39, 223, 695, 196);
-		contentPane.add(scrollPane);
-		
-		table = new JTable();
-		scrollPane.setViewportView(table);
 		
 		JLabel lblNewLabel = new JLabel("REZERWACJA POKOJU");
-		lblNewLabel.setForeground(new Color(255, 215, 0));
+		lblNewLabel.setForeground(new Color(96, 96, 128));
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 28));
-		lblNewLabel.setBounds(260, 36, 371, 39);
+		lblNewLabel.setBounds(336, 35, 371, 39);
 		contentPane.add(lblNewLabel);
 		
 		JButton btnNewButton = new JButton("Sprawdz wolne pokoje");
 		
-		btnNewButton.setBounds(307, 177, 212, 25);
+		btnNewButton.setBounds(407, 221, 214, 39);
 		contentPane.add(btnNewButton);
 		
 		JButton btnIdGoscia = new JButton("Dokonaj Rezerwacji");
+		btnIdGoscia.setEnabled(false);
 		
-		
-		btnIdGoscia.setBounds(273, 458, 256, 54);
+		btnIdGoscia.setBounds(407, 575, 256, 54);
 		contentPane.add(btnIdGoscia);
 		
 		JLabel lblNewLabel_1 = new JLabel("od");
-		lblNewLabel_1.setForeground(new Color(34, 139, 34));
-		lblNewLabel_1.setBounds(156, 112, 70, 15);
+		lblNewLabel_1.setForeground(new Color(255, 255, 0));
+		lblNewLabel_1.setBounds(338, 110, 70, 15);
 		contentPane.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("do");
-		lblNewLabel_2.setForeground(new Color(34, 139, 34));
-		lblNewLabel_2.setBounds(409, 112, 70, 15);
+		lblNewLabel_2.setForeground(new Color(255, 255, 0));
+		lblNewLabel_2.setBounds(338, 171, 70, 15);
 		contentPane.add(lblNewLabel_2);
+		
 		
 		JDateChooser dateChooser = new JDateChooser();
 		dateChooser.setDateFormatString("yyyy-MM-dd");
-		dateChooser.setBounds(214, 104, 151, 23);
+		dateChooser.setBounds(533, 110, 151, 23);
+		dateChooser.setMinSelectableDate(new Date());
+		dateChooser.getDateEditor().setEnabled(false);
 		contentPane.add(dateChooser);
 		
 		JDateChooser dateChooser_1 = new JDateChooser();
 		dateChooser_1.setDateFormatString("yyyy-MM-dd");
-		dateChooser_1.setBounds(473, 102, 201, 25);
+		dateChooser_1.setBounds(533, 161, 151, 25);
+		dateChooser_1.setMinSelectableDate(new Date());
+		dateChooser_1.getDateEditor().setEnabled(false);
 		contentPane.add(dateChooser_1);
 		
+		JLabel label = new JLabel("");
+		label.setIcon(new ImageIcon("/home/filip-linux/workspace/gui/obrazki/pokoj.jpg"));
+		label.setBounds(0, 0, 1043, 699);
+		contentPane.add(label);
+		
+		table = new JTable();
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBorder(null);
+		scrollPane.setBounds(220, 330, 597, 200);
+		contentPane.add(scrollPane);
+		scrollPane.setViewportView(table);
 		
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 					
-					
-					
+				if(dateChooser.getDate() != null && dateChooser_1.getDate() != null)
+				{
+					btnIdGoscia.setEnabled(true);
 					String query1 = "SELECT * FROM Pokoje WHERE IDGoscia IS NOT NULL";
 					PreparedStatement pst1;
 					try {
@@ -190,8 +200,6 @@ public class HotelApp extends JFrame {
 							
 							if(IsFreeInPeriod(data_przyjazdu, data_wyjazdu, DataPrzyjazdu, DataOdjazdu))
 							{
-								
-								JOptionPane.showMessageDialog(null, "Pokoj "+ Pokoj + " wolny!");
 								String query2 = "UPDATE Pokoje SET WolnyWTerminie = true WHERE nrPokoju = ?";
 								PreparedStatement pst2 = connection.prepareStatement(query2);
 								pst2.setString(1, Pokoj);
@@ -199,7 +207,6 @@ public class HotelApp extends JFrame {
 							} else 
 							{
 
-								JOptionPane.showMessageDialog(null, "Pokoj "+ Pokoj + " zajety!");
 								String queryfalse = "UPDATE Pokoje SET WolnyWTerminie = false WHERE nrPokoju = ?";
 								PreparedStatement pstfalse = connection.prepareStatement(queryfalse);
 								pstfalse.setString(1, Pokoj);
@@ -233,24 +240,28 @@ public class HotelApp extends JFrame {
 						e1.printStackTrace();
 					}
 					
-					String query3 = "SELECT * FROM Pokoje WHERE WolnyWTerminie = true";
+					String query3 = "SELECT nrPokoju, RodzajPokoju, Cena, IDGoscia, DataPrzyjazdu, DataOdjazdu FROM Pokoje WHERE WolnyWTerminie = true";
 					PreparedStatement pst3;
 					try {
 						pst3 = connection.prepareStatement(query3);
 						ResultSet rst3 = pst3.executeQuery();
 						
 						table.setModel(DbUtils.resultSetToTableModel(rst3));
+						DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+
+						for(int x=0;x<table.getColumnCount();x++){
+					         table.getColumnModel().getColumn(x).setCellRenderer( centerRenderer );
+					        }
+						
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
-					}
+					}		
 					
-					
-//					Object x = table.getValueAt(3, 0);
-//					JOptionPane.showMessageDialog(null, x);
-					
-					
-					
+				} else 
+				{
+					JOptionPane.showMessageDialog(null, "Wybierz odpowiednia date!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
 				
 			}
 		});
@@ -278,20 +289,28 @@ public class HotelApp extends JFrame {
 					e2.printStackTrace();
 				}
 				
-				
-				
 				int current_row = table.getSelectedRow();
-				Object x = table.getValueAt(current_row, 0);
-				nrPok = x.toString();
-				JOptionPane.showMessageDialog(null, "Zarezerwowano pokoj nr "+nrPok);
-				ReservationForm form;
-				try {
-					form = new ReservationForm();
-					form.setVisible(true);
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				
+				if(current_row > 0) 
+				{
+					Object x = table.getValueAt(current_row, 0);
+					nrPok = x.toString();
+					ReservationForm form;
+					try {
+						
+						form = new ReservationForm();
+						form.setVisible(true);
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
+				else 
+				{
+					JOptionPane.showMessageDialog(null, "Prosze wybrac pokoj", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				
+				
 				
 			}
 		});

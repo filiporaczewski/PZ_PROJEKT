@@ -47,33 +47,33 @@ public class DodajPokoj extends JFrame {
 		
 		connection = mySqlConnection.dbConnector();
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 683, 399);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(0, 0, 51));
+		contentPane.setBackground(new Color(16, 16, 32));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel lblDsada = new JLabel("Dodaj Pokoj");
-		lblDsada.setForeground(new Color(255, 215, 0));
+		lblDsada.setForeground(new Color(96, 96, 128));
 		lblDsada.setBackground(new Color(0, 0, 51));
 		lblDsada.setFont(new Font("Dialog", Font.BOLD, 32));
 		lblDsada.setBounds(221, 22, 255, 64);
 		contentPane.add(lblDsada);
 		
 		JLabel lblNewLabel = new JLabel("Numer Pokoju");
-		lblNewLabel.setForeground(new Color(34, 139, 34));
+		lblNewLabel.setForeground(new Color(255, 255, 0));
 		lblNewLabel.setBounds(93, 106, 117, 37);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("Rodzaj Pokoju (iluusobowy?)");
-		lblNewLabel_1.setForeground(new Color(34, 139, 34));
+		lblNewLabel_1.setForeground(new Color(255, 255, 0));
 		lblNewLabel_1.setBounds(92, 172, 232, 37);
 		contentPane.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("Cena");
-		lblNewLabel_2.setForeground(new Color(34, 139, 34));
+		lblNewLabel_2.setForeground(new Color(255, 255, 0));
 		lblNewLabel_2.setBounds(93, 249, 117, 22);
 		contentPane.add(lblNewLabel_2);
 		

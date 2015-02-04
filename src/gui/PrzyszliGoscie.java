@@ -96,17 +96,17 @@ public class PrzyszliGoscie extends JFrame {
 	public PrzyszliGoscie() throws SQLException, ParseException {
 		connection = mySqlConnection.dbConnector();
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1117, 502);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(0, 0, 51));
+		contentPane.setBackground(new Color(16, 16, 32));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Przyszli goscie");
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 25));
-		lblNewLabel.setForeground(new Color(255, 215, 0));
+		lblNewLabel.setForeground(new Color(96, 96, 128));
 		lblNewLabel.setBounds(341, 23, 252, 73);
 		contentPane.add(lblNewLabel);
 		
@@ -177,6 +177,11 @@ public class PrzyszliGoscie extends JFrame {
 						odswiezTabele();
 						JOptionPane.showMessageDialog(null, "Gosc "+IDGoscia+" usuniety!");
 						
+						String usun_gosci_z_pokoju = "UPDATE Pokoje SET IDGoscia=NULL, DataPrzyjazdu=NULL, DataOdjazdu=NULL WHERE IDGoscia=?";
+						PreparedStatement UsunGosciZPokoju = connection.prepareStatement(usun_gosci_z_pokoju);
+						UsunGosciZPokoju.setInt(1, IDGoscia);
+						UsunGosciZPokoju.executeUpdate();
+						
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -187,16 +192,6 @@ public class PrzyszliGoscie extends JFrame {
 		});
 		btnUsunGoscia.setBounds(907, 125, 152, 47);
 		contentPane.add(btnUsunGoscia);
-		
-		JButton btnOdswiez = new JButton("Odswiez");
-		btnOdswiez.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-				tableModel.fireTableDataChanged();
-			}
-		});
-		btnOdswiez.setBounds(907, 193, 152, 47);
-		contentPane.add(btnOdswiez);
 		
 	}
 }

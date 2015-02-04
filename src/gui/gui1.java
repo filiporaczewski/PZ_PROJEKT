@@ -60,19 +60,20 @@ public class gui1 {
 	private void initialize() {
 		frame = new JFrame();
 		frame.getContentPane().setFont(new Font("DialogInput", Font.PLAIN, 12));
-		frame.getContentPane().setBackground(new Color(0, 0, 51));
+		frame.getContentPane().setBackground(new Color(16, 16, 32));
+		
 		frame.setBounds(100, 100, 539, 340);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Nazwa użytkownika");
-		lblNewLabel.setForeground(new Color(34, 139, 34));
+		lblNewLabel.setForeground(new Color(255, 255, 0));
 		lblNewLabel.setFont(new Font("Nimbus Mono L", Font.BOLD, 15));
 		lblNewLabel.setBounds(47, 141, 175, 30);
 		frame.getContentPane().add(lblNewLabel);
 		
 		JLabel lblH = new JLabel("Hasło");
-		lblH.setForeground(new Color(34, 139, 34));
+		lblH.setForeground(new Color(255, 255, 0));
 		lblH.setFont(new Font("Nimbus Mono L", Font.BOLD, 15));
 		lblH.setBounds(141, 183, 52, 30);
 		frame.getContentPane().add(lblH);
@@ -90,7 +91,7 @@ public class gui1 {
 		frame.getContentPane().add(passwordField);
 		
 		JLabel lblNewLabel_1 = new JLabel("ZALOGUJ SIĘ");
-		lblNewLabel_1.setForeground(Color.ORANGE);
+		lblNewLabel_1.setForeground(new Color(96, 96, 128));
 		lblNewLabel_1.setFont(new Font("Nimbus Mono L", Font.BOLD, 40));
 		lblNewLabel_1.setBounds(141, 44, 279, 59);
 		frame.getContentPane().add(lblNewLabel_1);
