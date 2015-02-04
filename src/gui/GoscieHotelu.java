@@ -35,6 +35,8 @@ public class GoscieHotelu extends JFrame {
 	private JTable table;
 	private JScrollPane scrollPane;
 
+	public static int id_goscia;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -95,10 +97,10 @@ public class GoscieHotelu extends JFrame {
 		}	
 	}
 	
-	public boolean brakWyboru(JTable table) {
+	public boolean brakWyboru(JTable table, String akcja) {
 		ListSelectionModel listSelectionModel = table.getSelectionModel();
 		if(listSelectionModel.isSelectionEmpty()) {
-			JOptionPane.showMessageDialog(null, "Zaznacz goscia, ktorego chcesz usunac!", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Zaznacz goscia, ktorego chcesz "+akcja, "Error", JOptionPane.ERROR_MESSAGE);
 			return true;
 		}
 		return false;
@@ -187,7 +189,7 @@ public class GoscieHotelu extends JFrame {
 				
 				
 				
-				if(ostrzezenie == 0 && !brakWyboru(table) ) 		
+				if(ostrzezenie == 0 && !brakWyboru(table, "usunac!") ) 		
 				{
 					int current_row = table.getSelectedRow();
 					Object x = table.getValueAt(current_row, 0);
@@ -217,6 +219,23 @@ public class GoscieHotelu extends JFrame {
 		});
 		btnUsunGoscia.setBounds(876, 98, 142, 37);
 		contentPane.add(btnUsunGoscia);
+		
+		JButton btnEdytujGoscia = new JButton("Edytuj goscia");
+		btnEdytujGoscia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(!brakWyboru(table, "edytowac!"))
+				{
+					int current_row = table.getSelectedRow();
+					Object x = table.getValueAt(current_row, 0);		
+					id_goscia = Integer.parseInt(x.toString());
+					FormularzEdycji formularz = new FormularzEdycji();
+					formularz.setVisible(true);
+				}
+				
+			}
+		});
+		btnEdytujGoscia.setBounds(876, 158, 142, 37);
+		contentPane.add(btnEdytujGoscia);
 		
 		
 	}
