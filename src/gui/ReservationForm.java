@@ -43,6 +43,9 @@ public class ReservationForm extends JFrame {
 	
 	Connection connection = null;
 
+	public String imie_goscia;
+	public String nazwisko_goscia;
+	
 	/**
 	 * Create the frame.
 	 * @throws ParseException 
@@ -95,13 +98,13 @@ public class ReservationForm extends JFrame {
 		contentPane.add(textPane_2);
 		
 		JButton btnNewButton = new JButton("GOTOWE");
+		
+				
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(textPane.getText().length() > 0 && textPane_1.getText().length() > 0 && textPane_2.getText().length() > 0) {
 				
 					HotelApp.id_goscia += 1;
-					JOptionPane.showMessageDialog(null, HotelApp.id_goscia);
-					JOptionPane.showMessageDialog(null, HotelApp.nrPok);
 					String dane = "INSERT INTO Goscie (IDGoscia, Imie, Nazwisko, nrPokoju, Adres) VALUES  (?, ?, ?, ?, ?)";
 					try {
 						
@@ -113,6 +116,7 @@ public class ReservationForm extends JFrame {
 						pst.setString(4, HotelApp.nrPok);
 						pst.setString(5, textPane_2.getText());
 						pst.executeUpdate();
+						
 						
 						String wszystko_z_pokoi = "SELECT * FROM Pokoje WHERE IDGoscia IS NOT NULL";
 						PreparedStatement pokoje_wszystko = connection.prepareStatement(wszystko_z_pokoi);
@@ -153,8 +157,9 @@ public class ReservationForm extends JFrame {
 					}
 					
 					
-					
-					JOptionPane.showMessageDialog(null, "Reservation made");
+					imie_goscia = textPane.getText();
+					nazwisko_goscia = textPane_1.getText();
+					JOptionPane.showMessageDialog(null, "Pokoj nr. "+HotelApp.nrPok+" zarezerwowany przez "+imie_goscia+" "+nazwisko_goscia);
 				} else 
 				{
 					JOptionPane.showMessageDialog(null, "Prosze uzupelnic wszystkie pola", "Error", JOptionPane.ERROR_MESSAGE);

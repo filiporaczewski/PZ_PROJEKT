@@ -291,7 +291,7 @@ public class HotelApp extends JFrame {
 				
 				int current_row = table.getSelectedRow();
 				
-				if(current_row > 0) 
+				if(current_row >= 0) 
 				{
 					Object x = table.getValueAt(current_row, 0);
 					nrPok = x.toString();
