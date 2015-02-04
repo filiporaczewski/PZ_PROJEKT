@@ -6,6 +6,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 
@@ -50,6 +51,8 @@ public class GoscieHotelu extends JFrame {
 		});
 	}
 	
+
+	
 	Connection connection = null;
 
 	public Boolean AktualniGoscie(String ad, String room_occupied_from, String room_occupied_to)
@@ -90,6 +93,15 @@ public class GoscieHotelu extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
+	}
+	
+	public boolean brakWyboru(JTable table) {
+		ListSelectionModel listSelectionModel = table.getSelectionModel();
+		if(listSelectionModel.isSelectionEmpty()) {
+			JOptionPane.showMessageDialog(null, "Zaznacz goscia, ktorego chcesz usunac!", "Error", JOptionPane.ERROR_MESSAGE);
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -169,12 +181,17 @@ public class GoscieHotelu extends JFrame {
 		JButton btnUsunGoscia = new JButton("Usun goscia");
 		btnUsunGoscia.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				
 				int ostrzezenie = JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunac goscia?", "Usun", JOptionPane.YES_NO_OPTION);
 				
-				if(ostrzezenie == 0) 		
+				
+				
+				if(ostrzezenie == 0 && !brakWyboru(table) ) 		
 				{
 					int current_row = table.getSelectedRow();
 					Object x = table.getValueAt(current_row, 0);
+					
 					int IDGoscia = Integer.parseInt(x.toString());
 					
 					String query = "DELETE FROM Goscie WHERE IDGoscia=?";

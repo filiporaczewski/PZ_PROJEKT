@@ -7,6 +7,7 @@ import java.awt.Frame;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -69,6 +70,15 @@ public class PrzyszliGoscie extends JFrame {
 			return true;
 		}
 		
+		return false;
+	}
+	
+	public boolean brakWyboru(JTable table) {
+		ListSelectionModel listSelectionModel = table.getSelectionModel();
+		if(listSelectionModel.isSelectionEmpty()) {
+			JOptionPane.showMessageDialog(null, "Zaznacz goscia, ktorego chcesz usunac!", "Error", JOptionPane.ERROR_MESSAGE);
+			return true;
+		}
 		return false;
 	}
 	
@@ -162,10 +172,13 @@ public class PrzyszliGoscie extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int ostrzezenie = JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunac goscia?", "Usun", JOptionPane.YES_NO_OPTION);
 				
-				if(ostrzezenie == 0) 		
+				
+				
+				if(ostrzezenie == 0 && !brakWyboru(table) ) 		
 				{
 					int current_row = table.getSelectedRow();
 					Object x = table.getValueAt(current_row, 0);
+					
 					int IDGoscia = Integer.parseInt(x.toString());
 					
 					String query = "DELETE FROM Goscie WHERE IDGoscia=?";
@@ -186,7 +199,7 @@ public class PrzyszliGoscie extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-				}				
+				}			
 				
 			}
 		});

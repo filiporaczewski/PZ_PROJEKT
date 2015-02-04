@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
@@ -17,6 +18,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.sql.*;
 import java.awt.Color;
+
+import javax.swing.SwingConstants;
 
 public class DodajPokoj extends JFrame {
 
@@ -38,6 +41,20 @@ public class DodajPokoj extends JFrame {
 		});
 	}
 	
+	public static boolean isNumeric(String str, String name)  
+	{  
+	  try  
+	  {  
+	    Double.parseDouble(str);  
+	  }  
+	  catch(NumberFormatException nfe)  
+	  {  
+		JOptionPane.showMessageDialog(null, name + " musi byc liczba..", "Error", JOptionPane.ERROR_MESSAGE);  
+	    return false;  
+	  }  
+	  return true;  
+	}
+	
 	Connection connection = null;
 
 	/**
@@ -48,7 +65,7 @@ public class DodajPokoj extends JFrame {
 		connection = mySqlConnection.dbConnector();
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 683, 399);
+		setBounds(100, 100, 478, 445);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(16, 16, 32));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -59,55 +76,68 @@ public class DodajPokoj extends JFrame {
 		lblDsada.setForeground(new Color(96, 96, 128));
 		lblDsada.setBackground(new Color(0, 0, 51));
 		lblDsada.setFont(new Font("Dialog", Font.BOLD, 32));
-		lblDsada.setBounds(221, 22, 255, 64);
+		lblDsada.setBounds(117, 24, 255, 64);
 		contentPane.add(lblDsada);
 		
 		JLabel lblNewLabel = new JLabel("Numer Pokoju");
+		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 15));
 		lblNewLabel.setForeground(new Color(255, 255, 0));
-		lblNewLabel.setBounds(93, 106, 117, 37);
+		lblNewLabel.setBounds(117, 113, 117, 37);
 		contentPane.add(lblNewLabel);
 		
-		JLabel lblNewLabel_1 = new JLabel("Rodzaj Pokoju (iluusobowy?)");
+		JLabel lblNewLabel_1 = new JLabel("<html>Rodzaj Pokoju<br> (iluusobowy?)</html>");
+		lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD, 15));
 		lblNewLabel_1.setForeground(new Color(255, 255, 0));
-		lblNewLabel_1.setBounds(92, 172, 232, 37);
+		lblNewLabel_1.setBounds(113, 185, 150, 55);
 		contentPane.add(lblNewLabel_1);
 		
-		JLabel lblNewLabel_2 = new JLabel("Cena");
+		JLabel lblNewLabel_2 = new JLabel("Cena (pln)");
+		lblNewLabel_2.setFont(new Font("Dialog", Font.BOLD, 15));
 		lblNewLabel_2.setForeground(new Color(255, 255, 0));
-		lblNewLabel_2.setBounds(93, 249, 117, 22);
+		lblNewLabel_2.setBounds(117, 292, 117, 22);
 		contentPane.add(lblNewLabel_2);
 		
 		JButton btnDodajPokoj = new JButton("Dodaj Pokoj");
 		
-		btnDodajPokoj.setBounds(235, 308, 157, 30);
+		btnDodajPokoj.setBounds(148, 367, 163, 37);
 		contentPane.add(btnDodajPokoj);
 		
 		JTextPane textPane = new JTextPane();
-		textPane.setBounds(319, 106, 192, 38);
+		textPane.setBounds(297, 113, 59, 37);
 		contentPane.add(textPane);
 		
 		JTextPane textPane_1 = new JTextPane();
-		textPane_1.setBounds(319, 172, 192, 37);
+		textPane_1.setBounds(297, 195, 59, 37);
 		contentPane.add(textPane_1);
 		
 		JTextPane textPane_2 = new JTextPane();
-		textPane_2.setBounds(319, 234, 192, 37);
+		textPane_2.setBounds(297, 277, 59, 37);
 		contentPane.add(textPane_2);
 		
 		btnDodajPokoj.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String query = "INSERT INTO Pokoje (nrPokoju, RodzajPokoju, Cena) VALUES (?, ?, ?)";
-				try {
-					PreparedStatement pst = connection.prepareStatement(query);
-					pst.setString(1, textPane.getText());
-					pst.setInt(2, Integer.parseInt(textPane_1.getText()));
-					pst.setInt(3, Integer.parseInt(textPane_2.getText()));
-					pst.execute();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+		
+				
+				if(textPane.getText().length() > 0 && textPane_1.getText().length() > 0 && textPane_2.getText().length() > 0 && DodajPokoj.isNumeric(textPane.getText(), "Numer pokoju") && DodajPokoj.isNumeric(textPane_1.getText(), "Rodzaj pokoju") && DodajPokoj.isNumeric(textPane_2.getText(), "Cena")) {
+					String query = "INSERT INTO Pokoje (nrPokoju, RodzajPokoju, Cena) VALUES (?, ?, ?)";
+					
+					try {
+						PreparedStatement pst = connection.prepareStatement(query);
+						pst.setString(1, textPane.getText());
+						pst.setInt(2, Integer.parseInt(textPane_1.getText()));
+						pst.setInt(3, Integer.parseInt(textPane_2.getText()));
+						pst.execute();
+					}
+					 catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				} else 
+				{
+					JOptionPane.showMessageDialog(null, "Prosze uzupelnic dane", "Error", JOptionPane.ERROR_MESSAGE);
 				}
-			}
+			}		
 		});
+		
 	}
 }
