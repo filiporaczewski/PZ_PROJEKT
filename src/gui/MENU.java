@@ -128,6 +128,31 @@ public class MENU extends JFrame {
 		});
 		mntmNewMenuItem_1.setForeground(new Color(96, 96, 128));
 		mnNewMenu.add(mntmNewMenuItem_1);
+		
+		JMenu mnBar = new JMenu("Bar");
+		mnBar.setForeground(new Color(96, 96, 128));
+		mnNewMenu.add(mnBar);
+		
+		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Nowa pozycja");
+		mntmNewMenuItem_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				BarNowaPozycja bar_dodaj = new BarNowaPozycja();
+				bar_dodaj.setVisible(true);
+			}
+		});
+		mntmNewMenuItem_2.setForeground(new Color(96, 96, 128));
+		mnBar.add(mntmNewMenuItem_2);
+		
+		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Nowe zamowienie");
+		mntmNewMenuItem_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				BarHotelowy bar_zamowienie = new BarHotelowy();
+				bar_zamowienie.setVisible(true);
+			}
+		});
+		mntmNewMenuItem_3.setForeground(new Color(96, 96, 128));
+		mnBar.add(mntmNewMenuItem_3);
+		
 		contentPane = new JPanel();
 		
 		contentPane.setBackground(new Color(16, 16, 32));
@@ -140,5 +165,4 @@ public class MENU extends JFrame {
 		label.setIcon(new ImageIcon("/home/filip-linux/workspace/gui/obrazki/hti_1448061504.jpg"));
 		contentPane.add(label);
 	}
-	
 }

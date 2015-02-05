@@ -107,6 +107,71 @@ public class GoscieHotelu extends JFrame {
 		return false;
 	}
 	
+	public void wczytajDane(JTable table)
+	{
+		String query = "SELECT * FROM Goscie";
+		PreparedStatement pst;
+		try {
+			pst = connection.prepareStatement(query);
+			ResultSet rs = pst.executeQuery();
+			while(rs.next()) 
+			{
+				
+				PreparedStatement pst2 = connection.prepareStatement("SELECT DataPrzyjazdu, DataOdjazdu FROM Pokoje WHERE IDGoscia=?");
+				
+				int id_goscia = rs.getInt("IDGoscia");
+				pst2.setInt(1, id_goscia);
+				ResultSet rs2 = pst2.executeQuery();
+				
+				if(rs2.next()) 
+				{
+					String data_od = rs2.getString("DataPrzyjazdu");
+					String data_do = rs2.getString("DataOdjazdu");
+					
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					Date ad = new Date();
+					String aktualna_data = dateFormat.format(ad);
+					
+					if(AktualniGoscie(aktualna_data, data_od, data_do))
+					{
+						String czy_gosc = "UPDATE Goscie SET czyGosc = true WHERE idGoscia=?";
+						PreparedStatement psczygosc = connection.prepareStatement(czy_gosc);
+						psczygosc.setInt(1, id_goscia);
+						psczygosc.executeUpdate();
+					}
+					else 
+					{
+						String nie_gosc = "UPDATE Goscie SET czyGosc = false WHERE idGoscia=?";
+						PreparedStatement niepsczygosc = connection.prepareStatement(nie_gosc);
+						niepsczygosc.setInt(1, id_goscia);
+						niepsczygosc.executeUpdate();
+					}
+				}
+				
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+				
+				
+		
+		String goscieKwerenda = "Select Goscie.IDGoscia, Goscie.Imie, Goscie.Nazwisko, Goscie.nrPokoju, Goscie.Adres, Pokoje.DataPrzyjazdu, Pokoje.DataOdjazdu FROM Goscie INNER JOIN Pokoje ON Goscie.IDGoscia = Pokoje.IDGoscia WHERE Goscie.czyGosc = true";
+		PreparedStatement psgoscie;
+		try {
+			psgoscie = connection.prepareStatement(goscieKwerenda);
+			ResultSet rsgoscie = psgoscie.executeQuery();
+			table.setModel(DbUtils.resultSetToTableModel(rsgoscie));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
 	/**
 	 * Create the frame.
 	 * @throws SQLException 
@@ -128,50 +193,7 @@ public class GoscieHotelu extends JFrame {
 		lblNewLabel.setBounds(338, 28, 236, 46);
 		contentPane.add(lblNewLabel);
 		
-		String query = "SELECT * FROM Goscie";
-		PreparedStatement pst = connection.prepareStatement(query);
-		ResultSet rs = pst.executeQuery();
-				
-				while(rs.next()) 
-				{
-					
-					PreparedStatement pst2 = connection.prepareStatement("SELECT DataPrzyjazdu, DataOdjazdu FROM Pokoje WHERE IDGoscia=?");
-					
-					int id_goscia = rs.getInt("IDGoscia");
-					pst2.setInt(1, id_goscia);
-					ResultSet rs2 = pst2.executeQuery();
-					
-					if(rs2.next()) 
-					{
-						String data_od = rs2.getString("DataPrzyjazdu");
-						String data_do = rs2.getString("DataOdjazdu");
-						
-						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-						Date ad = new Date();
-						String aktualna_data = dateFormat.format(ad);
-						
-						if(AktualniGoscie(aktualna_data, data_od, data_do))
-						{
-							String czy_gosc = "UPDATE Goscie SET czyGosc = true WHERE idGoscia=?";
-							PreparedStatement psczygosc = connection.prepareStatement(czy_gosc);
-							psczygosc.setInt(1, id_goscia);
-							psczygosc.executeUpdate();
-						}
-						else 
-						{
-							String nie_gosc = "UPDATE Goscie SET czyGosc = false WHERE idGoscia=?";
-							PreparedStatement niepsczygosc = connection.prepareStatement(nie_gosc);
-							niepsczygosc.setInt(1, id_goscia);
-							niepsczygosc.executeUpdate();
-						}
-					}
-					
-					
-				}
 		
-		String goscieKwerenda = "Select Goscie.IDGoscia, Goscie.Imie, Goscie.Nazwisko, Goscie.nrPokoju, Goscie.Adres, Pokoje.DataPrzyjazdu, Pokoje.DataOdjazdu FROM Goscie INNER JOIN Pokoje ON Goscie.IDGoscia = Pokoje.IDGoscia WHERE Goscie.czyGosc = true";
-		PreparedStatement psgoscie = connection.prepareStatement(goscieKwerenda);
-		ResultSet rsgoscie = psgoscie.executeQuery();
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(33, 86, 813, 340);
@@ -179,7 +201,7 @@ public class GoscieHotelu extends JFrame {
 		
 		table = new JTable();
 		scrollPane.setViewportView(table);
-		table.setModel(DbUtils.resultSetToTableModel(rsgoscie));
+		wczytajDane(table);
 		
 		JButton btnUsunGoscia = new JButton("Usun goscia");
 		btnUsunGoscia.addActionListener(new ActionListener() {
@@ -218,7 +240,7 @@ public class GoscieHotelu extends JFrame {
 				}
 			}
 		});
-		btnUsunGoscia.setBounds(876, 98, 142, 37);
+		btnUsunGoscia.setBounds(876, 98, 152, 37);
 		contentPane.add(btnUsunGoscia);
 		
 		JButton btnEdytujGoscia = new JButton("Edytuj goscia");
@@ -235,9 +257,39 @@ public class GoscieHotelu extends JFrame {
 				
 			}
 		});
-		btnEdytujGoscia.setBounds(876, 158, 142, 37);
+		btnEdytujGoscia.setBounds(876, 158, 152, 37);
 		contentPane.add(btnEdytujGoscia);
 		
+		JButton btnWymeldujGosci = new JButton("Wymelduj");
+		btnWymeldujGosci.setBounds(876, 218, 152, 37);
+		btnWymeldujGosci.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Date aktualna_data = new Date();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String data = sdf.format(aktualna_data);
+				
+				String query = "Select Goscie.IDGoscia, Goscie.Imie, Goscie.Nazwisko, Goscie.nrPokoju, Goscie.Adres, Pokoje.DataPrzyjazdu, Pokoje.DataOdjazdu FROM Goscie INNER JOIN Pokoje ON Goscie.IDGoscia = Pokoje.IDGoscia WHERE Pokoje.DataOdjazdu=?";
+				try {
+					PreparedStatement pst = connection.prepareStatement(query);
+					pst.setString(1, data);
+					ResultSet goscie_do_wymeldowania = pst.executeQuery();
+					table.setModel(DbUtils.resultSetToTableModel(goscie_do_wymeldowania));
+					
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		contentPane.add(btnWymeldujGosci);
 		
+		JButton btnPokazGosci = new JButton("Wszyscy goscie");
+		btnPokazGosci.setBounds(876, 278, 152, 37);
+		btnPokazGosci.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				wczytajDane(table);
+			}
+		});
+		contentPane.add(btnPokazGosci);
 	}
 }
