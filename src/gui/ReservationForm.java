@@ -28,11 +28,14 @@ public class ReservationForm extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	
+	public static ReservationForm frame;
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ReservationForm frame = new ReservationForm();
+					frame = new ReservationForm();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -118,8 +121,9 @@ public class ReservationForm extends JFrame {
 						pst.executeUpdate();
 						
 						
-						String wszystko_z_pokoi = "SELECT * FROM Pokoje WHERE IDGoscia IS NOT NULL";
+						String wszystko_z_pokoi = "SELECT * FROM Pokoje WHERE IDGoscia = ?";
 						PreparedStatement pokoje_wszystko = connection.prepareStatement(wszystko_z_pokoi);
+						pokoje_wszystko.setInt(1, HotelApp.id_goscia);
 						ResultSet wszystkie_pokoje = pokoje_wszystko.executeQuery();
 						
 						if(wszystkie_pokoje.next())
@@ -160,6 +164,7 @@ public class ReservationForm extends JFrame {
 					imie_goscia = textPane.getText();
 					nazwisko_goscia = textPane_1.getText();
 					JOptionPane.showMessageDialog(null, "Pokoj nr. "+HotelApp.nrPok+" zarezerwowany przez "+imie_goscia+" "+nazwisko_goscia);
+					
 				} else 
 				{
 					JOptionPane.showMessageDialog(null, "Prosze uzupelnic wszystkie pola", "Error", JOptionPane.ERROR_MESSAGE);

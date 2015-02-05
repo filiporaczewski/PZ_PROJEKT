@@ -39,6 +39,7 @@ import com.toedter.calendar.JDateChooser;
 
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
+
 import javax.swing.border.LineBorder;
 import javax.swing.border.CompoundBorder;
 
@@ -103,10 +104,6 @@ public class HotelApp extends JFrame {
 		}	
 	}
 		
-
-
-
-	
 	
 	public HotelApp() throws ParseException, SQLException {
 		connection = mySqlConnection.dbConnector();
@@ -119,33 +116,45 @@ public class HotelApp extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		String [] options = {"-","1","2","3","4","5", "6"};
+		JComboBox<String> comboBox = new JComboBox<>(options);
+		comboBox.setBounds(533, 222, 151, 23);
+		contentPane.add(comboBox);
 		
 		JLabel lblNewLabel = new JLabel("REZERWACJA POKOJU");
 		lblNewLabel.setForeground(new Color(96, 96, 128));
-		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 28));
+		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 30));
 		lblNewLabel.setBounds(336, 35, 371, 39);
 		contentPane.add(lblNewLabel);
 		
 		JButton btnNewButton = new JButton("Sprawdz wolne pokoje");
 		
-		btnNewButton.setBounds(407, 221, 214, 39);
+		btnNewButton.setBounds(407, 279, 214, 39);
 		contentPane.add(btnNewButton);
 		
 		JButton btnIdGoscia = new JButton("Dokonaj Rezerwacji");
 		btnIdGoscia.setEnabled(false);
 		
-		btnIdGoscia.setBounds(407, 575, 256, 54);
+		btnIdGoscia.setBounds(407, 597, 256, 54);
 		contentPane.add(btnIdGoscia);
 		
 		JLabel lblNewLabel_1 = new JLabel("od");
+		lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD, 15));
 		lblNewLabel_1.setForeground(new Color(255, 255, 0));
 		lblNewLabel_1.setBounds(338, 110, 70, 15);
 		contentPane.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("do");
+		lblNewLabel_2.setFont(new Font("Dialog", Font.BOLD, 15));
 		lblNewLabel_2.setForeground(new Color(255, 255, 0));
 		lblNewLabel_2.setBounds(338, 171, 70, 15);
 		contentPane.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("<html>Rodzaj pokoju <br>(iluosobowy)</html>");
+		lblNewLabel_3.setFont(new Font("Dialog", Font.BOLD, 15));
+		lblNewLabel_3.setForeground(new Color(255, 255, 0));
+		lblNewLabel_3.setBounds(336, 219, 151, 31);
+		contentPane.add(lblNewLabel_3);
 		
 		
 		JDateChooser dateChooser = new JDateChooser();
@@ -171,7 +180,7 @@ public class HotelApp extends JFrame {
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setBorder(null);
-		scrollPane.setBounds(220, 330, 597, 200);
+		scrollPane.setBounds(240, 360, 597, 200);
 		contentPane.add(scrollPane);
 		scrollPane.setViewportView(table);
 		
@@ -239,11 +248,22 @@ public class HotelApp extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					
-					String query3 = "SELECT nrPokoju, RodzajPokoju, Cena, IDGoscia, DataPrzyjazdu, DataOdjazdu FROM Pokoje WHERE WolnyWTerminie = true";
+					String query3;
+					if(comboBox.getSelectedItem() == "-")
+					{
+						query3 = "SELECT nrPokoju, RodzajPokoju, Cena, IDGoscia, DataPrzyjazdu, DataOdjazdu FROM Pokoje WHERE WolnyWTerminie = true ORDER BY NrPokoju";
+					}
+					else
+					{
+						query3 = "SELECT nrPokoju, RodzajPokoju, Cena, IDGoscia, DataPrzyjazdu, DataOdjazdu FROM Pokoje WHERE WolnyWTerminie = true AND RodzajPokoju=? ORDER BY NrPokoju";
+					}
 					PreparedStatement pst3;
 					try {
 						pst3 = connection.prepareStatement(query3);
+						if(comboBox.getSelectedItem() != "-")
+							pst3.setInt(1, Integer.parseInt((String) comboBox.getSelectedItem()));
+						
+						
 						ResultSet rst3 = pst3.executeQuery();
 						
 						table.setModel(DbUtils.resultSetToTableModel(rst3));
