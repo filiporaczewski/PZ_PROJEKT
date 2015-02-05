@@ -39,7 +39,10 @@ public class PrzyszliGoscie extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private JScrollPane scrollPane;
-
+	
+	public static int id_goscia;
+	public static String klasa = "przyszli_goscie";
+	
 	/**
 	 * Launch the application.
 	 */
@@ -73,10 +76,10 @@ public class PrzyszliGoscie extends JFrame {
 		return false;
 	}
 	
-	public boolean brakWyboru(JTable table) {
+	public boolean brakWyboru(JTable table, String akcja) {
 		ListSelectionModel listSelectionModel = table.getSelectionModel();
 		if(listSelectionModel.isSelectionEmpty()) {
-			JOptionPane.showMessageDialog(null, "Zaznacz goscia, ktorego chcesz usunac!", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Zaznacz goscia, ktorego chcesz "+akcja, "Error", JOptionPane.ERROR_MESSAGE);
 			return true;
 		}
 		return false;
@@ -174,12 +177,13 @@ public class PrzyszliGoscie extends JFrame {
 				
 				
 				
-				if(ostrzezenie == 0 && !brakWyboru(table) ) 		
+				if(ostrzezenie == 0 && !brakWyboru(table, "usunac!") ) 		
 				{
 					int current_row = table.getSelectedRow();
 					Object x = table.getValueAt(current_row, 0);
 					
 					int IDGoscia = Integer.parseInt(x.toString());
+					id_goscia = Integer.parseInt(x.toString());
 					
 					String query = "DELETE FROM Goscie WHERE IDGoscia=?";
 					PreparedStatement pst;
@@ -203,8 +207,25 @@ public class PrzyszliGoscie extends JFrame {
 				
 			}
 		});
-		btnUsunGoscia.setBounds(907, 125, 152, 47);
+		btnUsunGoscia.setBounds(907, 125, 152, 40);
 		contentPane.add(btnUsunGoscia);
+		
+		JButton btnEdytujGoscia = new JButton("Edytuj goscia");
+		btnEdytujGoscia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(!brakWyboru(table, "edytowac!"))
+				{
+					int current_row = table.getSelectedRow();
+					Object x = table.getValueAt(current_row, 0);		
+					id_goscia = Integer.parseInt(x.toString());
+					FormularzEdycji formularz = new FormularzEdycji(klasa);
+					formularz.setVisible(true);
+				}
+				
+			}
+		});
+		btnEdytujGoscia.setBounds(907, 188, 152, 40);
+		contentPane.add(btnEdytujGoscia);
 		
 	}
 }

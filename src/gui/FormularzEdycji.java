@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 public class FormularzEdycji extends JFrame {
 
 	private JPanel contentPane;
+	private String przyszli_czy_obecni;
 
 	/**
 	 * Launch the application.
@@ -33,7 +34,7 @@ public class FormularzEdycji extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FormularzEdycji frame = new FormularzEdycji();
+					FormularzEdycji frame = new FormularzEdycji("");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -47,8 +48,20 @@ public class FormularzEdycji extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public FormularzEdycji() {
+	public FormularzEdycji(String klasa) {
+		przyszli_czy_obecni = klasa;
 		connection = mySqlConnection.dbConnector();
+		int id_goscia;
+		
+		if(przyszli_czy_obecni == "obecni")
+		{
+			id_goscia = GoscieHotelu.id_goscia;
+		} else
+		{
+			id_goscia = PrzyszliGoscie.id_goscia;
+		}
+		
+		
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 598, 550);
@@ -114,7 +127,8 @@ public class FormularzEdycji extends JFrame {
 		textPane_4.setBounds(277, 401, 227, 28);
 		contentPane.add(textPane_4);
 		
-		int id_goscia = GoscieHotelu.id_goscia;
+		
+		
 		String dane_goscia = "SELECT IDGoscia, Imie, Nazwisko, NrPokoju, Adres FROM Goscie WHERE IDGoscia = ?";
 		PreparedStatement pobierz_dane;
 		try {
@@ -147,7 +161,7 @@ public class FormularzEdycji extends JFrame {
 					edycja.setString(5, textPane_4.getText());
 					edycja.setInt(6, id_goscia);
 					edycja.executeUpdate();
-					JOptionPane.showMessageDialog(null, "Gosc edytowany pomyslnie!");
+					JOptionPane.showMessageDialog(null, "Gosc "+id_goscia+" edytowany pomyslnie!");
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

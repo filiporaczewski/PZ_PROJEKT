@@ -36,6 +36,7 @@ public class GoscieHotelu extends JFrame {
 	private JScrollPane scrollPane;
 
 	public static int id_goscia;
+	public static String klasa = "obecni";
 	
 	/**
 	 * Launch the application.
@@ -228,7 +229,7 @@ public class GoscieHotelu extends JFrame {
 					int current_row = table.getSelectedRow();
 					Object x = table.getValueAt(current_row, 0);		
 					id_goscia = Integer.parseInt(x.toString());
-					FormularzEdycji formularz = new FormularzEdycji();
+					FormularzEdycji formularz = new FormularzEdycji(klasa);
 					formularz.setVisible(true);
 				}
 				
