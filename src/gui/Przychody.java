@@ -65,19 +65,14 @@ public class Przychody extends JFrame {
 			e.printStackTrace();
 		}
 		
-		String query_1 = "SELECT Cena, DataPrzyjazdu, DataOdjazdu FROM Pokoje WHERE DataPrzyjazdu=?";
+		String query_1 = "SELECT DataPrzyjazdu, DataOdjazdu, Rachunek FROM GoscieArchiwum WHERE DataPrzyjazdu=?";
 		try {
 			PreparedStatement pst_1 = connection.prepareStatement(query_1);
 			pst_1.setString(1, data);
 			ResultSet rs_1 = pst_1.executeQuery();
 			while(rs_1.next())
 			{
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				Date date1 = sdf.parse(data);
-				Date date2 = sdf.parse(rs_1.getString("DataOdjazdu"));
-				long diff = date2.getTime() - date1.getTime();
-				int days = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-				przychod = przychod + rs_1.getInt("Cena") * days;
+				przychod = przychod + rs_1.getInt("Rachunek");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

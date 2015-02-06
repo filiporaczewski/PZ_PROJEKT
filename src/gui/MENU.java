@@ -125,6 +125,10 @@ public class MENU extends JFrame {
 		});
 		mnNewMenu.add(mntmS);
 		
+		JMenu mnGoscie = new JMenu("Goscie");
+		mnGoscie.setForeground(new Color(96, 96, 128));
+		mnNewMenu.add(mnGoscie);
+		
 		mntmNewMenuItem = new JMenuItem("Goscie");
 		if(goscieDoWymeldowania())
 		{
@@ -145,19 +149,9 @@ public class MENU extends JFrame {
 				
 			}
 		});
-		mnNewMenu.add(mntmNewMenuItem);
+		mnGoscie.add(mntmNewMenuItem);
 		
-		JMenuItem mntmDodajPokoj = new JMenuItem("Dodaj Pokoj");
-		mntmDodajPokoj.setForeground(new Color(96, 96, 128));
-		mntmDodajPokoj.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				DodajPokoj dodaj_pokoj = new DodajPokoj();
-				dodaj_pokoj.setVisible(true);
-			}
-		});
-		mnNewMenu.add(mntmDodajPokoj);
-		
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Przyszli Goscie");
+		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Przyszli goscie");
 		mntmNewMenuItem_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PrzyszliGoscie goscie;
@@ -176,7 +170,28 @@ public class MENU extends JFrame {
 			}
 		});
 		mntmNewMenuItem_1.setForeground(new Color(96, 96, 128));
-		mnNewMenu.add(mntmNewMenuItem_1);
+		mnGoscie.add(mntmNewMenuItem_1);
+		
+		JMenuItem mntmArchiwumGosci = new JMenuItem("Archiwum gosci");
+		mntmArchiwumGosci.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ArchiwumGosci archiwum;
+				archiwum = new ArchiwumGosci();
+				archiwum.setVisible(true);
+			}
+		});
+		mntmArchiwumGosci.setForeground(new Color(96, 96, 128));
+		mnGoscie.add(mntmArchiwumGosci);
+		
+		JMenuItem mntmDodajPokoj = new JMenuItem("Dodaj Pokoj");
+		mntmDodajPokoj.setForeground(new Color(96, 96, 128));
+		mntmDodajPokoj.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DodajPokoj dodaj_pokoj = new DodajPokoj();
+				dodaj_pokoj.setVisible(true);
+			}
+		});
+		mnNewMenu.add(mntmDodajPokoj);
 		
 		JMenu mnBar = new JMenu("Bar");
 		mnBar.setForeground(new Color(96, 96, 128));

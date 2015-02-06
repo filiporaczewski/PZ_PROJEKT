@@ -74,7 +74,9 @@ public class PrzychodyRoczne extends JFrame {
 			case "Listopad": miesiac_liczba = 10;
 				break;
 			case "Grudzien": miesiac_liczba = 11;
+				break;
 		}
+		
 	}
 
 	public void przychodMiesieczny(int miesiac, String miesiac_string) throws ParseException
@@ -104,7 +106,7 @@ public class PrzychodyRoczne extends JFrame {
 			e.printStackTrace();
 		}
 		
-		String query_1 = "SELECT Cena, DataPrzyjazdu, DataOdjazdu FROM Pokoje WHERE DataPrzyjazdu IS NOT NULL";
+		String query_1 = "SELECT DataPrzyjazdu, DataOdjazdu, Rachunek FROM GoscieArchiwum";
 		try {
 			PreparedStatement pst_1 = connection.prepareStatement(query_1);
 			ResultSet rs_1 = pst_1.executeQuery();
@@ -114,16 +116,10 @@ public class PrzychodyRoczne extends JFrame {
 				Date data_1 = sdf.parse(data_string_1);
 				Calendar calendar_1 = Calendar.getInstance();
 				calendar_1.setTime(data_1);
-				
-				int miesiac_z_bazy_1 = calendar_1.get(Calendar.MONTH);
-				
+				int miesiac_z_bazy_1 = calendar_1.get(Calendar.MONTH);				
 				if(miesiac_z_bazy_1 == miesiac)
 				{
-					Date data_2 = sdf.parse(rs_1.getString("DataOdjazdu"));
-					long diff = data_2.getTime() - data_1.getTime();
-					int days = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-					przychod = przychod + rs_1.getInt("Cena") * days;
-					
+					przychod = przychod + rs_1.getInt("Rachunek");
 				}
 			}
 		} catch (SQLException e) {

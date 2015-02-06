@@ -3,6 +3,9 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -24,6 +27,9 @@ import java.awt.Color;
 public class ReservationForm extends JFrame {
 
 	private JPanel contentPane;
+	Connection connection = null;
+	public String imie_goscia;
+	public String nazwisko_goscia;
 
 	/**
 	 * Launch the application.
@@ -44,10 +50,42 @@ public class ReservationForm extends JFrame {
 		});
 	}
 	
-	Connection connection = null;
-
-	public String imie_goscia;
-	public String nazwisko_goscia;
+	public void dodajDoArchiwum(String Imie, String Nazwisko, String Adres, int Cena) 
+	{
+		String dodaj_wartosci = "INSERT INTO GoscieArchiwum VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		//IDGoscia, Imie, Nazwisko, nrPokoju, Adres, DataPrzyjazdu, DataOdjazdu, Rachunek
+		
+		PreparedStatement dodaj_do_archiwum;
+		try {
+			dodaj_do_archiwum = connection.prepareStatement(dodaj_wartosci);
+			dodaj_do_archiwum.setInt(1, HotelApp.id_goscia);
+			dodaj_do_archiwum.setString(2, Imie);
+			dodaj_do_archiwum.setString(3, Nazwisko);
+			dodaj_do_archiwum.setString(4, HotelApp.nrPok);
+			dodaj_do_archiwum.setString(5, Adres);
+			dodaj_do_archiwum.setString(6, HotelApp.data_przyjazdu);
+			dodaj_do_archiwum.setString(7, HotelApp.data_wyjazdu);
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				Date date1 = sdf.parse(HotelApp.data_przyjazdu);
+				Date date2 = sdf.parse(HotelApp.data_wyjazdu);
+				long diff = date2.getTime() - date1.getTime();
+				int days = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+				int rachunek = Cena * days;
+				dodaj_do_archiwum.setInt(8, rachunek);
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			dodaj_do_archiwum.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	/**
 	 * Create the frame.
@@ -138,16 +176,34 @@ public class ReservationForm extends JFrame {
 							dodaj_wiersz.setString(6, HotelApp.data_wyjazdu);
 							dodaj_wiersz.execute();
 							
+							dodajDoArchiwum(textPane.getText(), textPane_1.getText(), textPane_2.getText(), wszystkie_pokoje.getInt("Cena"));
+							
 						} else 
 						{
 							String uzupelnienie_tabeli_pokoje = "UPDATE Pokoje SET IDGoscia = ?, DataPrzyjazdu = ?, DataOdjazdu = ? WHERE nrPokoju = ?";
 							try {
+								
+								String query = "SELECT Cena FROM Pokoje WHERE NrPokoju=? AND IDGoscia IS NULL";
+								PreparedStatement pst_1 = connection.prepareStatement(query);
+								pst_1.setString(1, HotelApp.nrPok);
+								ResultSet rs_1 = pst_1.executeQuery();
+								int cena = 0;
+								if(rs_1.next())
+								{
+									JOptionPane.showMessageDialog(null, cena);
+									cena = rs_1.getInt("Cena");
+								}
+								
+								dodajDoArchiwum(textPane.getText(), textPane_1.getText(), textPane_2.getText(), cena);
+								
 								PreparedStatement pst2 = connection.prepareStatement(uzupelnienie_tabeli_pokoje);
 								pst2.setInt(1, HotelApp.id_goscia);
 								pst2.setString(2, HotelApp.data_przyjazdu);
 								pst2.setString(3, HotelApp.data_wyjazdu);
 								pst2.setString(4, HotelApp.nrPok);
 								pst2.executeUpdate();
+								
+								
 								
 							} catch (SQLException e1) {
 								// TODO Auto-generated catch block

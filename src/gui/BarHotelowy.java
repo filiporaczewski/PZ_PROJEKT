@@ -164,7 +164,7 @@ public class BarHotelowy extends JFrame {
 						zamow.setString(4, data);
 						
 						zamow.execute();
-						JOptionPane.showMessageDialog(null, "Zamowienie dodane!");
+						JOptionPane.showMessageDialog(null, "Zamowienie dodane! Do zaplaty: " + cena_zamowienia + "pln.");
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
