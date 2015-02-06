@@ -54,10 +54,34 @@ public class GoscieHotelu extends JFrame {
 		});
 	}
 	
-
-	
 	Connection connection = null;
 
+	public boolean goscieDoWymeldowania()
+	{
+		Date aktualna_data = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String data = sdf.format(aktualna_data);
+		connection = mySqlConnection.dbConnector();
+		String query = "SELECT DataOdjazdu FROM Pokoje";
+		try {
+			PreparedStatement pst = connection.prepareStatement(query);
+			ResultSet rs = pst.executeQuery();
+			while(rs.next()) 
+			{
+				
+				if(data.equals(rs.getString("DataOdjazdu")))
+				{
+					return true;
+				}
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	public Boolean AktualniGoscie(String ad, String room_occupied_from, String room_occupied_to)
 	{
 		try 
@@ -232,6 +256,11 @@ public class GoscieHotelu extends JFrame {
 						PreparedStatement UsunGosciZPokoju = connection.prepareStatement(usun_gosci_z_pokoju);
 						UsunGosciZPokoju.setInt(1, IDGoscia);
 						UsunGosciZPokoju.executeUpdate();
+						
+						if(!goscieDoWymeldowania())
+						{
+							MENU.mntmNewMenuItem.setForeground(new Color(96, 96, 128));
+						}
 						
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block

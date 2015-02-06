@@ -127,6 +127,7 @@ public class DodajPokoj extends JFrame {
 						pst.setInt(2, Integer.parseInt(textPane_1.getText()));
 						pst.setInt(3, Integer.parseInt(textPane_2.getText()));
 						pst.execute();
+						JOptionPane.showMessageDialog(null, "Pokoj dodany");
 					}
 					 catch (SQLException e1) {
 						// TODO Auto-generated catch block

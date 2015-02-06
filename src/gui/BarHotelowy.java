@@ -7,6 +7,7 @@ import java.awt.EventQueue;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -30,6 +31,7 @@ public class BarHotelowy extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -43,6 +45,16 @@ public class BarHotelowy extends JFrame {
 		});
 	}
 
+	public boolean isInteger(String s) {
+	    try { 
+	        Integer.parseInt(s); 
+	    } catch(NumberFormatException e) { 
+	        return false; 
+	    }
+	    // only got here if we didn't return false
+	    return true;
+	}
+	
 	/**
 	 * Create the frame.
 	 */
@@ -127,38 +139,40 @@ public class BarHotelowy extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String dodaj_zamowienie = "INSERT INTO BarZamowienia VALUES (?, ?, ?, ?)";
 				int cena_zamowienia = 0;
-				try {
-					PreparedStatement zamow = connection.prepareStatement(dodaj_zamowienie);
-					zamow.setString(1, (String) comboBox.getSelectedItem());
-					PreparedStatement cena = connection.prepareStatement("SELECT Cena FROM Bar WHERE NazwaProduktu = ?");
-					cena.setString(1, (String) comboBox.getSelectedItem());
-					ResultSet rs = cena.executeQuery();
-					if(rs.next()) 
-					{
-						cena_zamowienia = rs.getInt("Cena");
+				if(textPane.getText() != null && isInteger(textPane.getText())) 
+				{
+					try {
+						PreparedStatement zamow = connection.prepareStatement(dodaj_zamowienie);
+						zamow.setString(1, (String) comboBox.getSelectedItem());
+						PreparedStatement cena = connection.prepareStatement("SELECT Cena FROM Bar WHERE NazwaProduktu = ?");
+						cena.setString(1, (String) comboBox.getSelectedItem());
+						ResultSet rs = cena.executeQuery();
+						if(rs.next()) 
+						{
+							cena_zamowienia = rs.getInt("Cena");
+						}
+						int ilosc = Integer.parseInt(textPane.getText());
+						cena_zamowienia = cena_zamowienia * ilosc;
+						
+						zamow.setInt(2, cena_zamowienia);
+						zamow.setInt(3, ilosc);
+						
+						Date aktualna_data = new Date();
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+						String data = sdf.format(aktualna_data);
+						
+						zamow.setString(4, data);
+						
+						zamow.execute();
+						JOptionPane.showMessageDialog(null, "Zamowienie dodane!");
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
-					int ilosc = Integer.parseInt(textPane.getText());
-					cena_zamowienia = cena_zamowienia * ilosc;
-					
-					zamow.setInt(2, cena_zamowienia);
-					zamow.setInt(3, ilosc);
-					
-					Date aktualna_data = new Date();
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-					String data = sdf.format(aktualna_data);
-					
-					zamow.setString(4, data);
-					
-					zamow.execute();
-					JOptionPane.showMessageDialog(null, "Zamowienie dodane!");
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} else 
+				{
+					JOptionPane.showMessageDialog(null, "Prosze poprawnie wypelnic dane.");
 				}
-				
-				
-				
-				
 			}
 		});
 		

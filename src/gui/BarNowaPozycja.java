@@ -41,6 +41,16 @@ public class BarNowaPozycja extends JFrame {
 			}
 		});
 	}
+	
+	public boolean isInteger(String s) {
+	    try { 
+	        Integer.parseInt(s); 
+	    } catch(NumberFormatException e) { 
+	        return false; 
+	    }
+	    // only got here if we didn't return false
+	    return true;
+	}
 
 	/**
 	 * Create the frame.
@@ -51,7 +61,7 @@ public class BarNowaPozycja extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 483, 417);
 		contentPane = new JPanel();
-		//contentPane.setBackground(new Color(96, 96, 128));
+		
 		contentPane.setBackground(new Color(16, 16, 32));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -87,17 +97,22 @@ public class BarNowaPozycja extends JFrame {
 		btnDodajProdukt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String nowy_produkt = "INSERT INTO Bar VALUES (?,?)";
-				try {
-					PreparedStatement dodaj_produkt = connection.prepareStatement(nowy_produkt);
-					dodaj_produkt.setString(1, textPane_1.getText());
-					dodaj_produkt.setInt(2, Integer.parseInt(textPane_2.getText()));
-					dodaj_produkt.execute();
-					JOptionPane.showMessageDialog(null, "Produkt dodany pomyslnie!");
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				if(textPane_1.getText() != null && textPane_2.getText() != null && isInteger(textPane_2.getText()))
+				{
+					try {
+						PreparedStatement dodaj_produkt = connection.prepareStatement(nowy_produkt);
+						dodaj_produkt.setString(1, textPane_1.getText());
+						dodaj_produkt.setInt(2, Integer.parseInt(textPane_2.getText()));
+						dodaj_produkt.execute();
+						JOptionPane.showMessageDialog(null, "Produkt dodany pomyslnie!");
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				} else 
+				{
+					JOptionPane.showMessageDialog(null, "Prosze poprawnie uzupelnic formularz.");
 				}
-				
 				
 			}
 		});
