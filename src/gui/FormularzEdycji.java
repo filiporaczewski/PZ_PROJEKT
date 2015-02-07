@@ -23,6 +23,7 @@ public class FormularzEdycji extends JFrame {
 
 	private JPanel contentPane;
 	private String przyszli_czy_obecni;
+	Connection connection = null;
 
 	/**
 	 * Launch the application.
@@ -42,8 +43,18 @@ public class FormularzEdycji extends JFrame {
 			}
 		});
 	}
+	
+	
+	public boolean isInteger(String s) {
+	    try { 
+	        Integer.parseInt(s); 
+	    } catch(NumberFormatException e) { 
+	        return false; 
+	    }
+	    // only got here if we didn't return false
+	    return true;
+	}
 
-	Connection connection = null;
 	
 	/**
 	 * Create the frame.
@@ -151,23 +162,29 @@ public class FormularzEdycji extends JFrame {
 		JButton btnEdytuj = new JButton("Edytuj");
 		btnEdytuj.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String edytuj_goscia = "UPDATE Goscie SET IDGoscia=?, Imie=?, Nazwisko=?, NrPokoju=?, Adres=? WHERE IDGoscia = ?";
-				try {
-					PreparedStatement edycja = connection.prepareStatement(edytuj_goscia);
-					edycja.setInt(1, Integer.parseInt(textPane.getText()));
-					edycja.setString(2, textPane_1.getText());
-					edycja.setString(3, textPane_2.getText());
-					edycja.setString(4, textPane_3.getText());
-					edycja.setString(5, textPane_4.getText());
-					edycja.setInt(6, id_goscia);
-					edycja.executeUpdate();
-					JOptionPane.showMessageDialog(null, "Gosc "+id_goscia+" edytowany pomyslnie!");
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				if(isInteger(textPane.getText()) && textPane_1.getText().length() > 0 && textPane_2.getText().length() > 0 && isInteger(textPane_3.getText()) && textPane_4.getText().length() > 0)
+				{
+					String edytuj_goscia = "UPDATE Goscie SET IDGoscia=?, Imie=?, Nazwisko=?, NrPokoju=?, Adres=? WHERE IDGoscia = ?";
+					try {
+						PreparedStatement edycja = connection.prepareStatement(edytuj_goscia);
+						edycja.setInt(1, Integer.parseInt(textPane.getText()));
+						edycja.setString(2, textPane_1.getText());
+						edycja.setString(3, textPane_2.getText());
+						edycja.setString(4, textPane_3.getText());
+						edycja.setString(5, textPane_4.getText());
+						edycja.setInt(6, id_goscia);
+						edycja.executeUpdate();
+						JOptionPane.showMessageDialog(null, "Gosc "+id_goscia+" edytowany pomyslnie!");
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				
 				}
-				
-				
+				else 
+				{
+					JOptionPane.showMessageDialog(null, "Prosze poprawnie wypelnic dane.");
+				}
 			}
 		});
 		btnEdytuj.setBounds(371, 478, 133, 36);

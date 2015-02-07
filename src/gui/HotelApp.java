@@ -156,11 +156,16 @@ public class HotelApp extends JFrame {
 		lblNewLabel_3.setBounds(336, 219, 151, 31);
 		contentPane.add(lblNewLabel_3);
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		JDateChooser dateChooser = new JDateChooser();
 		dateChooser.setDateFormatString("yyyy-MM-dd");
 		dateChooser.setBounds(533, 110, 151, 23);
 		dateChooser.setMinSelectableDate(new Date());
+		String max_date = "2015-12-29";
+		Date MD = sdf.parse(max_date);
+		dateChooser.setMaxSelectableDate(MD);
+		
 		dateChooser.getDateEditor().setEnabled(false);
 		contentPane.add(dateChooser);
 		
@@ -168,6 +173,9 @@ public class HotelApp extends JFrame {
 		dateChooser_1.setDateFormatString("yyyy-MM-dd");
 		dateChooser_1.setBounds(533, 161, 151, 25);
 		dateChooser_1.setMinSelectableDate(new Date());
+		String max_date_1 = "2015-12-30";
+		Date MD_1 = sdf.parse(max_date_1);
+		dateChooser_1.setMaxSelectableDate(MD_1);
 		dateChooser_1.getDateEditor().setEnabled(false);
 		contentPane.add(dateChooser_1);
 		

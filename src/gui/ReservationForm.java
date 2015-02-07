@@ -30,6 +30,8 @@ public class ReservationForm extends JFrame {
 	Connection connection = null;
 	public String imie_goscia;
 	public String nazwisko_goscia;
+	int rachunek;
+	int days;
 
 	/**
 	 * Launch the application.
@@ -71,8 +73,8 @@ public class ReservationForm extends JFrame {
 				Date date1 = sdf.parse(HotelApp.data_przyjazdu);
 				Date date2 = sdf.parse(HotelApp.data_wyjazdu);
 				long diff = date2.getTime() - date1.getTime();
-				int days = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-				int rachunek = Cena * days;
+				days = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+				rachunek = Cena * days;
 				dodaj_do_archiwum.setInt(8, rachunek);
 			} catch (ParseException e1) {
 				// TODO Auto-generated catch block
@@ -190,7 +192,6 @@ public class ReservationForm extends JFrame {
 								int cena = 0;
 								if(rs_1.next())
 								{
-									JOptionPane.showMessageDialog(null, cena);
 									cena = rs_1.getInt("Cena");
 								}
 								
@@ -219,7 +220,7 @@ public class ReservationForm extends JFrame {
 					
 					imie_goscia = textPane.getText();
 					nazwisko_goscia = textPane_1.getText();
-					JOptionPane.showMessageDialog(null, "Pokoj nr. "+HotelApp.nrPok+" zarezerwowany przez "+imie_goscia+" "+nazwisko_goscia);
+					JOptionPane.showMessageDialog(null, "Pokoj nr. "+HotelApp.nrPok+" zarezerwowany przez "+imie_goscia+" "+nazwisko_goscia+ " na "+ days +" dni. Do zaplaty: "+rachunek+" pln.");
 					
 				} else 
 				{

@@ -128,6 +128,7 @@ public class PrzychodyRoczne extends JFrame {
 		}
 		
 		JOptionPane.showMessageDialog(null, "Przychod w miesiacu " + miesiac_string + " wyniosl " + przychod + "pln.");
+		przychod = 0;
 	}
 	
 	

@@ -27,6 +27,8 @@ public class Przychody extends JFrame {
 
 	private JPanel contentPane;
 	int przychod = 0;
+	int przychod_bar = 0;
+	int przychod_pokoje = 0;
 
 	/**
 	 * Launch the application.
@@ -60,6 +62,8 @@ public class Przychody extends JFrame {
 				przychod = przychod + rs.getInt("Cena");
 			}
 			
+			przychod_bar = przychod; 
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -79,7 +83,9 @@ public class Przychody extends JFrame {
 			e.printStackTrace();
 		}
 		
-		JOptionPane.showMessageDialog(null, "Calkowity przychod dnia " + data + ": " + przychod + " pln");
+		przychod_pokoje = przychod - przychod_bar;
+		JOptionPane.showMessageDialog(null, "Calkowity przychod dnia " + data + ": " + przychod + " pln\nBar: "+przychod_bar+"\nPokoje: "+przychod_pokoje);
+		przychod = 0;
 	}
 
 	/**

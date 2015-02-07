@@ -37,7 +37,6 @@ import javax.swing.ImageIcon;
 
 
 public class MENU extends JFrame {
-
 	
 	private JPanel contentPane;
 	Connection connection = null;
@@ -216,6 +215,7 @@ public class MENU extends JFrame {
 		});
 		mntmNewMenuItem_3.setForeground(new Color(96, 96, 128));
 		mnBar.add(mntmNewMenuItem_3);
+		
 		
 		JMenu mnPrzychody = new JMenu("Przychody");
 		mnPrzychody.setForeground(new Color(96, 96, 128));
