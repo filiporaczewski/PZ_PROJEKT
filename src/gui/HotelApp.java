@@ -179,8 +179,9 @@ public class HotelApp extends JFrame {
 		dateChooser_1.getDateEditor().setEnabled(false);
 		contentPane.add(dateChooser_1);
 		
-		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon("/home/filip-linux/workspace/gui/obrazki/pokoj.jpg"));
+		JLabel label = new JLabel(""); 
+		
+		label.setIcon(new ImageIcon("resources/obrazki/pokoj.jpg"));
 		label.setBounds(0, 0, 1043, 699);
 		contentPane.add(label);
 		

@@ -250,7 +250,8 @@ public class MENU extends JFrame {
 		
 		JLabel label = new JLabel("");
 		label.setBounds(0, 0, 1185, 661);
-		label.setIcon(new ImageIcon("/home/filip-linux/workspace/gui/obrazki/hti_1448061504.jpg"));
+		ImageIcon image = new ImageIcon("resources/obrazki/hti_1448061504.jpg");
+		label.setIcon(image);
 		contentPane.add(label);
 	}
 	

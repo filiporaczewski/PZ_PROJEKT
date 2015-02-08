@@ -105,7 +105,7 @@ public class BarHotelowy extends JFrame {
 		contentPane.add(comboBox);
 		
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon("/home/filip-linux/workspace/gui/obrazki/bar.jpg"));
+		label.setIcon(new ImageIcon("resources/obrazki/bar.jpg"));
 		label.setBounds(33, 287, 412, 192);
 		contentPane.add(label);
 		
