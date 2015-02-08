@@ -117,6 +117,8 @@ public class ArchiwumGosci extends JFrame {
 	public ArchiwumGosci() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 933, 474);
+		setResizable(false);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

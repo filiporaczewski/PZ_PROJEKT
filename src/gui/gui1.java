@@ -63,6 +63,8 @@ public class gui1 {
 		frame.getContentPane().setBackground(new Color(16, 16, 32));
 		
 		frame.setBounds(100, 100, 539, 340);
+		frame.setResizable(false);
+		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -79,13 +81,11 @@ public class gui1 {
 		frame.getContentPane().add(lblH);
 		
 		JTextPane textPane = new JTextPane();
-		textPane.setForeground(new Color(192, 192, 192));
 		textPane.setBackground(Color.WHITE);
 		textPane.setBounds(240, 141, 206, 30);
 		frame.getContentPane().add(textPane);
 		
 		passwordField = new JPasswordField();
-		passwordField.setForeground(new Color(192, 192, 192));
 		passwordField.setBackground(Color.WHITE);
 		passwordField.setBounds(240, 187, 206, 30);
 		frame.getContentPane().add(passwordField);

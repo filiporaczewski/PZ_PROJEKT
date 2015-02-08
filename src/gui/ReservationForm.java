@@ -97,6 +97,8 @@ public class ReservationForm extends JFrame {
 		connection = mySqlConnection.dbConnector();
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 649, 506);
+		setResizable(false);
+		
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(16, 16, 32));
 		contentPane.setForeground(new Color(34, 139, 34));
@@ -221,6 +223,7 @@ public class ReservationForm extends JFrame {
 					imie_goscia = textPane.getText();
 					nazwisko_goscia = textPane_1.getText();
 					JOptionPane.showMessageDialog(null, "Pokoj nr. "+HotelApp.nrPok+" zarezerwowany przez "+imie_goscia+" "+nazwisko_goscia+ " na "+ days +" dni. Do zaplaty: "+rachunek+" pln.");
+					dispose();
 					
 				} else 
 				{

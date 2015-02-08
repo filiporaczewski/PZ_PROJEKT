@@ -60,6 +60,8 @@ public class BarNowaPozycja extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 483, 417);
+		setResizable(false);
+		
 		contentPane = new JPanel();
 		
 		contentPane.setBackground(new Color(16, 16, 32));

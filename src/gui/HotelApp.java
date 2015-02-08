@@ -80,6 +80,12 @@ public class HotelApp extends JFrame {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date ad = sdf.parse(arival_date);
 			Date dd = sdf.parse(departure_date);
+
+			if(ad.compareTo(dd) > 0)
+			{
+				return false;
+			}
+			
 			Date rof = sdf.parse(room_occupied_from);
 			Date rot = sdf.parse(room_occupied_to);
 			
@@ -104,12 +110,13 @@ public class HotelApp extends JFrame {
 		}	
 	}
 		
-	
 	public HotelApp() throws ParseException, SQLException {
 		connection = mySqlConnection.dbConnector();
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1013, 691);
+		setResizable(false);
+		
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(16, 16, 32));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -238,55 +245,62 @@ public class HotelApp extends JFrame {
 						e1.printStackTrace();
 					}
 					
+					Date a_date = dateChooser.getDate();
+					Date d_date = dateChooser_1.getDate();
 					
-					String queryupdate = "UPDATE Pokoje SET WolnyWTerminie = true WHERE IdGoscia IS NULL";
-					PreparedStatement pstupdate;
-					try {
-						pstupdate = connection.prepareStatement(queryupdate);
-						pstupdate.executeUpdate();
-						
-						Date a_date = dateChooser.getDate();
-						Date d_date = dateChooser_1.getDate();
-						
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-						
-						data_przyjazdu = sdf.format(a_date);
-						data_wyjazdu = sdf.format(d_date);	
-						
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					String query3;
-					if(comboBox.getSelectedItem() == "-")
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					
+					data_przyjazdu = sdf.format(a_date);
+					data_wyjazdu = sdf.format(d_date);	
+					
+					if(a_date.compareTo(d_date) < 0)
+					
 					{
-						query3 = "SELECT nrPokoju, RodzajPokoju, Cena, IDGoscia, DataPrzyjazdu, DataOdjazdu FROM Pokoje WHERE WolnyWTerminie = true ORDER BY NrPokoju";
-					}
-					else
-					{
-						query3 = "SELECT nrPokoju, RodzajPokoju, Cena, IDGoscia, DataPrzyjazdu, DataOdjazdu FROM Pokoje WHERE WolnyWTerminie = true AND RodzajPokoju=? ORDER BY NrPokoju";
-					}
-					PreparedStatement pst3;
-					try {
-						pst3 = connection.prepareStatement(query3);
-						if(comboBox.getSelectedItem() != "-")
-							pst3.setInt(1, Integer.parseInt((String) comboBox.getSelectedItem()));
-						
-						
-						ResultSet rst3 = pst3.executeQuery();
-						
-						table.setModel(DbUtils.resultSetToTableModel(rst3));
-						DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+						String queryupdate = "UPDATE Pokoje SET WolnyWTerminie = true WHERE IdGoscia IS NULL";
+						PreparedStatement pstupdate;
+						try {
+							pstupdate = connection.prepareStatement(queryupdate);
+							pstupdate.executeUpdate();
+							
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						String query3;
+						if(comboBox.getSelectedItem() == "-")
+						{
+							query3 = "SELECT nrPokoju, RodzajPokoju, Cena, IDGoscia, DataPrzyjazdu, DataOdjazdu FROM Pokoje WHERE WolnyWTerminie = true ORDER BY NrPokoju";
+						}
+						else
+						{
+							query3 = "SELECT nrPokoju, RodzajPokoju, Cena, IDGoscia, DataPrzyjazdu, DataOdjazdu FROM Pokoje WHERE WolnyWTerminie = true AND RodzajPokoju=? ORDER BY NrPokoju";
+						}
+						PreparedStatement pst3;
+						try {
+							pst3 = connection.prepareStatement(query3);
+							if(comboBox.getSelectedItem() != "-")
+								pst3.setInt(1, Integer.parseInt((String) comboBox.getSelectedItem()));
+							
+							
+							ResultSet rst3 = pst3.executeQuery();
+							
+							table.setModel(DbUtils.resultSetToTableModel(rst3));
+							DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 
-						for(int x=0;x<table.getColumnCount();x++){
-					         table.getColumnModel().getColumn(x).setCellRenderer( centerRenderer );
-					        }
-						
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}		
-					
+							for(int x=0;x<table.getColumnCount();x++){
+						         table.getColumnModel().getColumn(x).setCellRenderer( centerRenderer );
+						        }
+							
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}		
+
+					} else
+					{
+						JOptionPane.showMessageDialog(null, "Pierwsza data wieksza od drugiej!", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+										
 				} else 
 				{
 					JOptionPane.showMessageDialog(null, "Wybierz odpowiednia date!", "Error", JOptionPane.ERROR_MESSAGE);

@@ -138,6 +138,8 @@ public class PrzychodyRoczne extends JFrame {
 	public PrzychodyRoczne() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 431, 292);
+		setResizable(false);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setBackground(new Color(16, 16, 32));

@@ -76,6 +76,8 @@ public class FormularzEdycji extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 598, 550);
+		setResizable(false);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -175,6 +177,7 @@ public class FormularzEdycji extends JFrame {
 						edycja.setInt(6, id_goscia);
 						edycja.executeUpdate();
 						JOptionPane.showMessageDialog(null, "Gosc "+id_goscia+" edytowany pomyslnie!");
+						dispose();
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
